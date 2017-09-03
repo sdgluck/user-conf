@@ -6,7 +6,7 @@ Made with ❤ at [@outlandish](http://www.twitter.com/outlandish)
 
 <a href="http://badge.fury.io/js/user-conf"><img alt="npm version" src="https://badge.fury.io/js/user-conf.svg"></a>
 
-Easily persist and update a JSON object to the user home directory. 
+Easily persist and update a JSON object in a user's home directory.
 
 Simplifies managing a single configuration (JSON) object for Node 
 programs that need to save user options, e.g. CLI apps. Probably has other
