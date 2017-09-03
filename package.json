@@ -1,6 +1,6 @@
 {
   "name": "user-conf",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Manage configs in the user home dir",
   "main": "bin/index.js",
   "jsnext:main": "index.js",
