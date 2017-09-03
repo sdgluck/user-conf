@@ -1,6 +1,6 @@
 {
   "name": "user-conf",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Manage configs in the user home dir",
   "main": "bin/index.js",
   "jsnext:main": "index.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "github.com/sdgluck/cli-user-config"
+    "url": "github.com/sdgluck/user-conf"
   },
   "keywords": [
     "cli",
