@@ -62,26 +62,26 @@ Set an option value or the whole object (pass `val` as first argument)
 
 - __key__ {String} _(optional)_ key name of option, accepts dot-paths
 - __value__ {*} value of option (must be serialisable as JSON)
-- __cb__ {Function} error-first callback
+- __cb__ {Function} _(optional)_ error-first callback
 
 #### `UserConfig#update(diff[, cb])`
 
 Merge an object into the user configuration.
 
 - __diff__ {Object} options object to merge (must be serialisable as JSON)
-- __cb__ {Function} error-first callback
+- __cb__ {Function} _(optional)_ error-first callback
 
 #### `UserConfig#clear([cb])`
 
 Clear the user configuration object of all options.
 
-- __cb__ {Function} error-first callback
+- __cb__ {Function} _(optional)_ error-first callback
  
 #### `UserConfig#destroy([cb])`
 
 Delete the config from filesystem.
 
-- __cb__ {Function} error-first callback
+- __cb__ {Function} _(optional)_ error-first callback
 
 ## Example
 
