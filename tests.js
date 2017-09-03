@@ -5,11 +5,6 @@ const userConf = require('./bin')
 
 const testConfName = '__test__'
 
-function confObj (obj) {
-  obj[userConf.ident] = true
-  return obj
-}
-
 describe('user-conf', () => {
   let conf
 
@@ -44,13 +39,13 @@ describe('user-conf', () => {
 
   it('setsAll and getsAll', () => {
     conf.setSync({name: 'David Bowie', awesome: true})
-    const expected = confObj({name: 'David Bowie', awesome: true})
+    const expected = {name: 'David Bowie', awesome: true}
     expect(conf.getSync()).toEqual(expected)
   })
 
   it('updates', () => {
     conf.updateSync({awesome: 'hell yeah!'})
-    const expected = confObj({name: 'David Bowie', awesome: 'hell yeah!'})
+    const expected = {name: 'David Bowie', awesome: 'hell yeah!'}
     expect(conf.getSync()).toEqual(expected)
   })
 
@@ -62,7 +57,7 @@ describe('user-conf', () => {
 
   it('clears', () => {
     conf.clearSync()
-    expect(conf.getSync()).toEqual(confObj({}))
+    expect(conf.getSync()).toEqual({})
   })
 
   it('destroys conf', (done) => {

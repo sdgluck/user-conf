@@ -68,12 +68,16 @@ class UserConfig {
     assertCb(cb)
     fs.readFile(this._confFile, (err, result) => {
       if (err) return cb(err)
-      cb(null, JSON.parse(String(result)))
+      const json = JSON.parse(String(result))
+      delete json[USER_CONF]
+      cb(null, json)
     })
   }
 
   _getJSONSync () {
-    return JSON.parse(String(fs.readFileSync(this._confFile)))
+    const json = JSON.parse(String(fs.readFileSync(this._confFile)))
+    delete json[USER_CONF]
+    return json
   }
 
   /// Public
@@ -169,7 +173,6 @@ class UserConfig {
 
 module.exports = {
   UserConfig,
-  ident: USER_CONF,
   init (...args) {
     return new UserConfig(...args)
   }
