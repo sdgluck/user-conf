@@ -5,7 +5,6 @@ import merge from 'lodash.merge'
 import get from 'lodash.get'
 import set from 'lodash.set'
 import isPlainObject from 'lodash.isplainobject'
-import homeDir from 'os-homedir'
 
 const USER_CONF = '__user-conf__'
 
@@ -23,7 +22,7 @@ class UserConfig {
       throw new Error('Expecting base to be plain object')
     }
 
-    this._confFile = path.resolve(homeDir(), name + '.json')
+    this._confFile = path.resolve(require('os').homedir(), name + '.json')
 
     if (fs.existsSync(this._confFile)) {
       let conf
