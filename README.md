@@ -56,11 +56,11 @@ Get all options or one option by passing `key`.
 - __key__ {String} _(optional)_ key name of option, accepts dot-paths
 - __cb__ {Function} _(optional)_ error-first callback
 
-#### `UserConfig#set(key, val[, cb])`
+#### `UserConfig#set([key,] val[, cb])`
 
-Set an option value.
+Set an option value or the whole object (pass `val` as first argument)
 
-- __key__ {String} key name of option, accepts dot-paths
+- __key__ {String} _(optional)_ key name of option, accepts dot-paths
 - __value__ {*} value of option (must be serialisable as JSON)
 - __cb__ {Function} error-first callback
 
@@ -74,6 +74,8 @@ Merge an object into the user configuration.
 #### `UserConfig#clear([cb])`
 
 Clear the user configuration object of all options.
+
+- __cb__ {Function} error-first callback
  
 #### `UserConfig#destroy([cb])`
 
