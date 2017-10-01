@@ -51,39 +51,32 @@ Returns an instance of UserConfig (available at `exports.UserConfig`).
 
 All methods except `destroy` have a `*Sync` equivalent, e.g. `getSync()` and `setSync()`.
 
-#### `UserConfig#get([key, cb]) : *`
+#### `UserConfig#get([key]) : Promise`
 
 Get all options or one option by passing `key`.
 
 - __key__ {String} _(optional)_ key name of option, accepts dot-paths
-- __cb__ {Function} _(optional)_ error-first callback
 
-#### `UserConfig#set([key,] val[, cb])`
+#### `UserConfig#set([key,] val) : Promise`
 
 Set an option value or the whole object (pass `val` as first argument)
 
 - __key__ {String} _(optional)_ key name of option, accepts dot-paths
 - __value__ {*} value of option (must be serialisable as JSON)
-- __cb__ {Function} _(optional)_ error-first callback
 
-#### `UserConfig#update(diff[, cb])`
+#### `UserConfig#update(diff) : Promise`
 
 Merge an object into the user configuration.
 
 - __diff__ {Object} options object to merge (must be serialisable as JSON)
-- __cb__ {Function} _(optional)_ error-first callback
 
-#### `UserConfig#clear([cb])`
+#### `UserConfig#clear() : Promise`
 
 Clear the user configuration object of all options.
-
-- __cb__ {Function} _(optional)_ error-first callback
  
-#### `UserConfig#destroy([cb])`
+#### `UserConfig#destroy() : Promise`
 
 Delete the config from filesystem.
-
-- __cb__ {Function} _(optional)_ error-first callback
 
 ## Example
 
