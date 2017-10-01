@@ -26,20 +26,16 @@ describe('user-conf', () => {
     expect(exists).toEqual(true)
   })
 
-  it('sets and gets', (done) => {
-    conf.set('name', 'Spongebob Squarepants', (err) => {
-      if (err) return done(err)
-      conf.get('name', (err, name) => {
-        if (err) return done(err)
-        expect(name).toEqual('Spongebob Squarepants')
-        done()
-      })
-    })
+  it('sets and gets', () => {
+    return conf.set('name', 'Spongebob Squarepants')
+      .then(() => conf.get('name'))
+      .then((name) => expect(name).toEqual('Spongebob Squarepants'))
   })
 
   it('setsAll and getsAll', () => {
     conf.setSync({name: 'David Bowie', awesome: true})
     const expected = {name: 'David Bowie', awesome: true}
+
     expect(conf.getSync()).toEqual(expected)
   })
 
@@ -60,12 +56,12 @@ describe('user-conf', () => {
     expect(conf.getSync()).toEqual({})
   })
 
-  it('destroys conf', (done) => {
-    conf.destroy((err) => {
-      if (err) return done(err)
+  it('destroys conf', () => {
+    conf.destroy().then(() => {
       const p = path.resolve(homeDir(), testConfName)
-      if (fs.existsSync(p)) return done(new Error('conf still exists'))
-      done()
+      if (fs.existsSync(p)) {
+        throw new Error('conf still exists')
+      }
     })
   })
 })

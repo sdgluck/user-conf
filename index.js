@@ -1,18 +1,18 @@
 import path from 'path'
-import fs from 'fs'
-import rimraf from 'rimraf'
+import pify from 'pify'
 import merge from 'lodash.merge'
 import get from 'lodash.get'
 import set from 'lodash.set'
 import isPlainObject from 'lodash.isplainobject'
 
+// to be promisified
+import _fs from 'fs'
+import _rimraf from 'rimraf'
+
 const USER_CONF = '__user-conf__'
 
-function assertCb (cb) {
-  if (typeof cb !== 'function') {
-    throw new Error('Expecting cb to be function')
-  }
-}
+const fs = pify(_fs)
+const rimraf = pify(_rimraf)
 
 class UserConfig {
   constructor (name, base = {}) {
@@ -22,7 +22,10 @@ class UserConfig {
       throw new Error('Expecting base to be plain object')
     }
 
-    this._confFile = path.resolve(require('os').homedir(), name + '.json')
+    this._confFile = path.resolve(
+      require('os').homedir(),
+      name + '.json'
+    )
 
     if (fs.existsSync(this._confFile)) {
       let conf
@@ -44,14 +47,13 @@ class UserConfig {
 
   /// Private
 
-  _writeJSON (obj, cb) {
+  _writeJSON (obj) {
     if (!isPlainObject(obj)) {
       throw new Error('Expecting obj to be object')
     }
-    assertCb(cb)
     obj[USER_CONF] = true
     const stringy = JSON.stringify(obj, null, '\t')
-    fs.writeFile(this._confFile, stringy, cb)
+    return fs.writeFile(this._confFile, stringy)
   }
 
   _writeJSONSync (obj) {
@@ -63,44 +65,37 @@ class UserConfig {
     fs.writeFileSync(this._confFile, stringy)
   }
 
-  _getJSON (cb) {
-    assertCb(cb)
-    fs.readFile(this._confFile, (err, result) => {
-      if (err) return cb(err)
+  _getJSON () {
+    return fs.readFile(this._confFile).then((result) => {
       const json = JSON.parse(String(result))
       delete json[USER_CONF]
-      cb(null, json)
+      return json
     })
   }
 
   _getJSONSync () {
-    const json = JSON.parse(String(fs.readFileSync(this._confFile)))
+    const stringy = String(fs.readFileSync(this._confFile))
+    const json = JSON.parse(stringy)
     delete json[USER_CONF]
     return json
   }
 
   /// Public
 
-  clear (cb = () => {}) {
-    assertCb(cb)
-    this._writeJSON({}, cb)
+  clear () {
+    return this._writeJSON({})
   }
 
   clearSync () {
     this._writeJSONSync({})
   }
 
-  get (key, cb) {
-    if (!cb) {
-      cb = key
-    } else if (typeof key !== 'string') {
+  get (key) {
+    if (key && typeof key !== 'string') {
       throw new Error('Expecting key to be string')
     }
-    assertCb(cb)
-    this._getJSON((err, json) => {
-      if (err) return cb(err)
-      cb(null, key ? get(json, key) : json)
-    })
+    return this._getJSON()
+      .then((json) => key ? get(json, key) : json)
   }
 
   getSync (key) {
@@ -111,27 +106,27 @@ class UserConfig {
     return key ? get(json, key) : json
   }
 
-  set (key, val, cb) {
+  set (key, val) {
     let json
-    if (isPlainObject(key)) {
-      cb = val || (() => {})
-      val = key
-      assertCb(cb)
-      json = val
+    if (typeof val === 'undefined') {
+      if (!isPlainObject(key)) {
+        throw new Error('set expects object if no key given')
+      }
+      json = key
     } else if (typeof key !== 'string') {
       throw new Error('Expecting key to be string')
     } else {
       json = this._getJSONSync()
       set(json, key, val)
     }
-    this._writeJSON(json, cb)
+    return this._writeJSON(json)
   }
 
   setSync (key, val) {
     let json
     if (typeof val === 'undefined') {
       if (!isPlainObject(key)) {
-        throw new Error('setSync expects value to be object if no key given')
+        throw new Error('setSync expects object if no key given')
       }
       json = key
     } else if (typeof key !== 'string') {
@@ -143,15 +138,13 @@ class UserConfig {
     this._writeJSONSync(json)
   }
 
-  update (diff, cb = () => {}) {
+  update (diff) {
     if (!isPlainObject(diff)) {
       throw new Error('Expecting diff to be object')
     }
-    assertCb(cb)
-    this.get((options) => {
-      const updatedOptions = merge({}, options, diff)
-      this.set(updatedOptions, () => this.get(cb))
-    })
+    return this.get()
+      .then((options) => this.set(merge({}, options, diff)))
+      .then(() => this.get())
   }
 
   updateSync (diff) {
@@ -164,9 +157,8 @@ class UserConfig {
     return this.getSync()
   }
 
-  destroy (cb = () => {}) {
-    assertCb(cb)
-    rimraf(this._confFile, cb)
+  destroy () {
+    return rimraf(this._confFile)
   }
 }
 
