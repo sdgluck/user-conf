@@ -84,16 +84,17 @@ Delete the config from filesystem.
 import userConf from 'user-conf'
 import prompt from 'inquirer'
 
-const conf = userConf.init('user-name-app', {name: 'Joe Bloggs'})
+const conf = userConf.init('user-name-app', {
+  name: 'Joe Bloggs'
+})
 
-console.log(conf.getSync('name')) 
+console.log(await get('name')) 
 //=> first run: "Joe Bloggs" 
 //=> subsequent runs: "Spongebob Squarepants" 
 
-prompt([{name: 'What\'s your name?'}]).then(({name}) => {
-  conf.setSync('name', name)
-  console.log(conf.getSync('name')) //=> "Spongebob Squarepants"
-})
+const {name} = await prompt([{name: 'What\'s your name?'}])
+await conf.set('name', name)
+console.log(await conf.get('name')) //=> "Spongebob Squarepants"
 ```
 
 ## Contributing
